@@ -352,6 +352,8 @@ def generate_mAP(pred_bboxes, true_boxes, iou_threshold, num_classes=4):
         precisions = torch.cat((torch.tensor([1]), precisions))
         recalls = torch.cat((torch.tensor([0]), recalls))
 
+        # used to calculate the definite integral of the curve, 
+        # approximating the area under the curve using the trapezoidal rule
         average_precisions.append(torch.trapz(precisions, recalls))
 
     return sum(average_precisions) / len(average_precisions) if average_precisions else 0
@@ -412,7 +414,7 @@ class Metric:
 
     def compute_mAP(self):
         # Compute mAP using stored predictions and ground truths
-        print('compute mAP...')
+        print('comput mAP...')
         if len(self.pred_boxex) == 0:
             print('no box detected, mAP is 0')
             return

@@ -332,7 +332,7 @@ class PoseLoss(nn.Module):
 
     def forward(self, p1_xyz, p1_wpqr, p2_xyz, p2_wpqr, p3_xyz, p3_wpqr, poseGT):
         # TODO: Implement loss
-        # First 3 entries of poseGT are ground truth xyz, last 4 values are ground truth wpqr Quaternion
+        # First 3 entries of poseGT are ground truth xyz, last 4 values are ground truth wpqr
 
         # Position loss
         loss_xyz_1 = F.mse_loss(p1_xyz, poseGT[:, :3])

@@ -2,6 +2,7 @@
 *.mp4
 *.ppt
 *.pptx
+*.avi
 *.png
 *.ckpt
 *.docx
@@ -25,4 +26,11 @@ __pycache__/
 *.pyc
 out/
 *.png
-stylegan3_nvlab
+Final_Project/models/
+pdf/
+Dataset
+.vscode
+data/
+wandb/
+*.path
+checkpoints/

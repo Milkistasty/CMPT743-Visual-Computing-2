@@ -32,7 +32,7 @@ args = parser.parse_args()
 class_num = 4 #cat dog person background
 num_epochs = 200
 batch_size = 32
-DEVICE = 'cuda'
+DEVICE = 'cpu'
 
 # Initialize W&B
 wandb.init(project='SSD', entity='wenhewangcrane')
@@ -163,7 +163,8 @@ else:
     #TEST
     dataset_test = COCO("data/test/images/", "data/test/annotations/", class_num, boxs_default, train = False, image_size=320)
     dataloader_test = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuffle=False, num_workers=0)
-    network.load_state_dict(torch.load('network-100.pth', map_location=torch.device('cuda')))
+
+    network.load_state_dict(torch.load('network-100.pth', map_location=torch.device('cpu')))
     network.eval()
     test_metric = Metric()
     
@@ -194,7 +195,7 @@ else:
                               ann_confidence_[0].numpy(), ann_box_[0].numpy(), boxs_default, images_[0].numpy(),
                               image_id)
 
-        cv2.waitKey(10)
+        cv2.waitKey(0)
 
         #TODO: save predicted bounding boxes and classes to a txt file.
         #you will need to submit those files for grading this assignment

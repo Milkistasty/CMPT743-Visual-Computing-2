@@ -121,7 +121,6 @@ def match(ann_box, ann_confidence, boxs_default, threshold, cat_id, x_min, y_min
 
     return ann_box, ann_confidence
 
-
 class COCO(torch.utils.data.Dataset):
     def __init__(self, imgdir, anndir, class_num, boxs_default, train = True, image_size=320):
         self.train = train

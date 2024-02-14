@@ -36,7 +36,7 @@ def main(epoch, data_dir):
 
     save_filename = 'epoch_{}.pth'.format(str(epoch).zfill(5))
     save_path = os.path.join('checkpoints', save_filename)
-    posenet.load_state_dict(torch.load(save_path))
+    posenet.load_state_dict(torch.load(save_path, map_location='cpu'))
     print("Checkpoint {} loaded!".format(save_filename))
 
 
