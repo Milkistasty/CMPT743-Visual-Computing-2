@@ -1,0 +1,36 @@
+[33mcommit fe3068c159bb58a3af14cd2f51f97beb12a01ecf[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Milkistasty <wenhewangcrane@gmail.com>
+Date:   Sun Feb 11 19:58:24 2024 -0800
+
+    Track .nvm file with Git LFS
+
+[33mcommit b2688541843abe7cdc188d3079323bb8dcac4e14[m
+Author: Milkistasty <wenhewangcrane@gmail.com>
+Date:   Sun Feb 11 19:56:35 2024 -0800
+
+    Re-add files with Git LFS tracking
+
+[33mcommit 756e070645ce9ef4b76121019aaa3bea561d81d1[m
+Author: Milkistasty <wenhewangcrane@gmail.com>
+Date:   Sun Feb 11 19:51:24 2024 -0800
+
+    Track NVM files with Git LFS
+
+[33mcommit 602b17edadfbb73f34883caa377952d10e397e33[m
+Merge: cfe52d7 efa37a5
+Author: Milkistasty <wenhewangcrane@gmail.com>
+Date:   Sun Feb 11 19:48:40 2024 -0800
+
+    Merge branch 'main' of https://github.com/Milkistasty/CMPT743-Visual-Computing-2
+
+[33mcommit cfe52d77f057a91cc143c7f8980cec91a0b93b90[m
+Author: Milkistasty <wenhewangcrane@gmail.com>
+Date:   Sun Feb 11 19:46:01 2024 -0800
+
+    Initial commit
+
+[33mcommit efa37a5ff75f240c53436b616489c0827fbc105c[m[33m ([m[1;31mmain/main[m[33m)[m
+Author: Wenhe Wang <wenhewangcrane@gmail.com>
+Date:   Sun Feb 11 19:43:36 2024 -0800
+
+    Initial commit
