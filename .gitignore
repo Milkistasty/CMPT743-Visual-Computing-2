@@ -34,3 +34,5 @@ data/
 wandb/
 *.path
 checkpoints/
+*.npy
+__pycache__
