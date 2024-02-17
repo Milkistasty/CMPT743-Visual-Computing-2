@@ -11,6 +11,8 @@ directory = 'data/datasets/KingsCollege/'
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+print(torch.cuda.is_available())
+
 def get_accuracy(pred_xyz, pred_wpqr, poses_gt):
     pose_xyz = poses_gt[0:3]
     pose_wpqr = poses_gt[3:]
