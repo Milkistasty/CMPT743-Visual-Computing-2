@@ -36,3 +36,5 @@ wandb/
 checkpoints/
 *.npy
 __pycache__
+emojis/
+vanilla_gan/

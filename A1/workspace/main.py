@@ -32,15 +32,15 @@ args = parser.parse_args()
 class_num = 4 #cat dog person background
 num_epochs = 200
 batch_size = 32
-DEVICE = 'cpu'
+DEVICE = 'cuda'
 
 # Initialize W&B
-wandb.init(project='SSD', entity='wenhewangcrane')
-config = wandb.config
-config.learning_rate = 1e-4
-config.epochs = num_epochs
-config.batch_size = batch_size
-config.class_num = class_num
+# wandb.init(project='SSD', entity='wenhewangcrane')
+# config = wandb.config
+# config.learning_rate = 1e-4
+# config.epochs = num_epochs
+# config.batch_size = batch_size
+# config.class_num = class_num
 
 boxs_default = default_box_generator([10,5,3,1], [0.2,0.4,0.6,0.8], [0.1,0.3,0.5,0.7])
 
@@ -164,7 +164,7 @@ else:
     dataset_test = COCO("data/test/images/", "data/test/annotations/", class_num, boxs_default, train = False, image_size=320)
     dataloader_test = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuffle=False, num_workers=0)
 
-    network.load_state_dict(torch.load('network-100.pth', map_location=torch.device('cpu')))
+    network.load_state_dict(torch.load('network-100.pth', map_location=torch.device('cuda')))
     network.eval()
     test_metric = Metric()
     
@@ -195,7 +195,7 @@ else:
                               ann_confidence_[0].numpy(), ann_box_[0].numpy(), boxs_default, images_[0].numpy(),
                               image_id)
 
-        cv2.waitKey(0)
+        cv2.waitKey(500)
 
         #TODO: save predicted bounding boxes and classes to a txt file.
         #you will need to submit those files for grading this assignment
@@ -212,12 +212,12 @@ else:
     print('F1 Score @0.75:', test_f1_75)
     print('F1 Score @0.95:', test_f1_95)
 
-    wandb.log({"test_mAP_50": test_mAP_50,
-                "test_mAP_75": test_mAP_75,
-                "test_mAP_95": test_mAP_95,
-                "test_f1_50": test_f1_50,
-                "test_f1_75": test_f1_75,
-                "test_f1_95": test_f1_95})
+    # wandb.log({"test_mAP_50": test_mAP_50,
+    #             "test_mAP_75": test_mAP_75,
+    #             "test_mAP_95": test_mAP_95,
+    #             "test_f1_50": test_f1_50,
+    #             "test_f1_75": test_f1_75,
+    #             "test_f1_95": test_f1_95})
 
     test_metric.reset_states()
 
