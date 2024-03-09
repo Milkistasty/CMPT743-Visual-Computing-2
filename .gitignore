@@ -38,3 +38,4 @@ checkpoints/
 __pycache__
 emojis/
 vanilla_gan/
+cycle_gan/
