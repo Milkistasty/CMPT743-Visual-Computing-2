@@ -39,3 +39,4 @@ __pycache__
 emojis/
 vanilla_gan/
 cycle_gan/
+experiments/
