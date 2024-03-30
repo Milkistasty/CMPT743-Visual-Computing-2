@@ -12,7 +12,8 @@ class OccupancyDataset(Dataset):
         """
         self.file_path = file_path
         self.data = self._load_data(file_path)
-        # self.count_occurrences()
+        self.count_occurrences()
+        self.downsampling()
 
     def _load_data(self, file_path):
         """
@@ -37,6 +38,7 @@ class OccupancyDataset(Dataset):
                         occupancy = 1  # Green for occupied
                     else:
                         occupancy = 0  # Default case, might adjust based on dataset specifics
+                
                     data.append(((x, y, z), occupancy))
         return data
 
@@ -59,6 +61,29 @@ class OccupancyDataset(Dataset):
         }
         for _, occupancy in self.data:
             self.occurrences[occupancy] += 1
+
+    def downsampling(self):
+        """
+        Balance the dataset by downsampling the majority class to match the size of the minority class.
+        """
+        # Find the size of the minority class
+        minority_size = min(self.occurrences.values())
+        
+        # Downsample the majority class to match the size of the minority class
+        balanced_data = []
+        for point, occupancy in self.data:
+            if self.occurrences[occupancy] > minority_size:
+                if occupancy == 0:
+                    if np.random.rand() < minority_size / self.occurrences[occupancy]:
+                        balanced_data.append((point, occupancy))
+                        self.occurrences[occupancy] -= 1
+                else:
+                    balanced_data.append((point, occupancy))
+                    self.occurrences[occupancy] -= 1
+            else:
+                balanced_data.append((point, occupancy))
+        
+        self.data = balanced_data
 
 
 

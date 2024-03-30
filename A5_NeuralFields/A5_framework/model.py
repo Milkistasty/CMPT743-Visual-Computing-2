@@ -60,7 +60,6 @@ class HashGrid(nn.Module):
         self.LOD = [int(1 + np.floor(self.min_res * (b**l))) for l in range(self.num_lod)]
         self.feature_grids = nn.ParameterList()
         self.init_feature_grids()
-        # a = 0
 
     def init_feature_grids(self):
         for l, lod in enumerate(self.LOD):
@@ -71,7 +70,12 @@ class HashGrid(nn.Module):
     def forward(self, pts):
         #TODO: Given 3D points, use the hash function to interpolate the features from the feature grids
         #TODO: concat interpolated feature from each LoD and return the concatenated tensor
+        
         feats = []
+
+        #TODO: add some minor noises to the points; not working
+        # pts = pts + torch.randn_like(pts) * 0.00001
+
         for l, lod, in enumerate(self.LOD):
             feats.append(bilinear_interp(self.feature_grids[l], pts, res=lod, grid_type="hash"))
         feats = torch.cat(feats, dim=1)
@@ -99,6 +103,11 @@ class MLP(nn.Module):
         self.layers.append(nn.Linear(self.width, 1))  # Output layer
         self.model = nn.Sequential(*self.layers)
 
+        # Initialize the layers with Xavier initialization
+        for layer in self.layers:
+            if isinstance(layer, nn.Linear):
+                torch.nn.init.xavier_uniform_(layer.weight)
+
     def forward(self, x):
         #x is the concatenated feature tensor from the feature grids
         #TODO: pass x through the MLP and return the output which is p(point is inside the object)
@@ -108,17 +117,18 @@ class MLP(nn.Module):
 #**************************************************************************************
     
 class OCCNet(nn.Module):
-    def __init__(self, grid_type="dense", grid_feat_dim=2, base_lod=4, num_lods=1, mlp_hidden_dim=256, num_layers=10
-        ):
+    def __init__(self, grid_type="dense", grid_feat_dim=4, base_lod=4, num_lods=6, mlp_hidden_dim=64, num_layers=2):
         #OCCNet is the main model that combines a feature grid (Dense or Hash grid) and an MLP
         #TODO: Initialize the feature grid and MLP
         super(OCCNet, self).__init__()
+
         if grid_type == 'dense':
             self.dense_grid = DenseGrid(feat_dim=grid_feat_dim, base_lod=base_lod, num_lods=num_lods)
         elif grid_type == 'hash':
-            self.dense_grid = HashGrid(min_res=2**base_lod, max_res=2**(base_lod+num_lods-1), num_lod=num_lods, hash_bandwidth=20, feat_dim=grid_feat_dim)
+            self.dense_grid = HashGrid(min_res=2**base_lod, max_res=2**(base_lod+num_lods-1), num_lod=num_lods, hash_bandwidth=13, feat_dim=grid_feat_dim)
         else:
             raise NotImplementedError('Grid type not implemented')
+        
         self.mlp = MLP(num_layers, mlp_hidden_dim, grid_feat_dim, num_lods)
 
     def get_params(self, lr):

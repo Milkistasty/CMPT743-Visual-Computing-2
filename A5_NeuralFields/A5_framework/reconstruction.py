@@ -138,6 +138,39 @@ def compute_metrics(reconstr_path, gt_path, num_samples=1000000):
     return chamfer_dist, hausdorff_dist
 
 
+"""
+not working, only the ear of the rabbit will be kept
+"""
+def get_largest_volume_object(rec_verts, rec_faces, volume_threshold=0.1):
+    """
+    Filters out low volume objects and returns the largest volume object.
+
+    Args:
+        rec_verts (np.array, [M, 3]): Reconstructed mesh vertices.
+        rec_faces (np.array, [K, 3]): Reconstructed mesh faces (triangle indices).
+        volume_threshold (float): Volume threshold below which connected components are removed.
+
+    Returns:
+        trimesh.Trimesh: Largest volume object from the reconstructed mesh.
+    """
+    mesh = trimesh.Trimesh(vertices=rec_verts, faces=rec_faces)
+
+    # Compute volumes of connected components
+    components = mesh.split()
+
+    # Filter components based on volume threshold
+    large_components = [comp for comp in components if comp.volume >= volume_threshold]
+
+    # If there are no large components, return the entire mesh
+    if not large_components:
+        return mesh
+
+    # Find the largest component among the large components
+    largest_component = max(large_components, key=lambda comp: comp.volume)
+
+    return largest_component
+
+
 
 if __name__ == "__main__":
     for model in os.listdir("model"):
@@ -147,14 +180,14 @@ if __name__ == "__main__":
             print(f"Evaluating model for {model} ...")
 
             filename = os.path.basename(model)
-            object_name = filename.split("_occupancy")[0] + ".obj"
+            object_name = filename.split("_OCCNet")[0] + ".obj"
             
             # Single LoD
             # model = OCCNet(grid_type="dense", grid_feat_dim=16, base_lod=8, num_lods=1, mlp_hidden_dim=64, num_layers=2)
             # Multi LoD
             # model = OCCNet(grid_type="dense", grid_feat_dim=16, base_lod=6, num_lods=3, mlp_hidden_dim=64, num_layers=2)
             # Hash
-            model = OCCNet(grid_type="hash", grid_feat_dim=16, base_lod=6, num_lods=3, mlp_hidden_dim=64, num_layers=2)
+            model = OCCNet(grid_type="hash", grid_feat_dim=4, base_lod=4, num_lods=6, mlp_hidden_dim=256, num_layers=9)
 
             model.load_state_dict(torch.load(model_path))
             model.eval() 
@@ -179,6 +212,10 @@ if __name__ == "__main__":
                     os.makedirs(os.path.dirname(reconstr_path), exist_ok=True)
 
                     trimesh.Trimesh(rec_verts, rec_faces).export(reconstr_path)
+                    
+                    #TODO: get the max volumes object only; not working, because the bodies of the rabbit are not connected together
+                    # largest_object = get_largest_volume_object(rec_verts, rec_faces, volume_threshold=-0.1)
+                    # largest_object.export(reconstr_path)
 
                     gt_path = f"data/{object_name}"
 
